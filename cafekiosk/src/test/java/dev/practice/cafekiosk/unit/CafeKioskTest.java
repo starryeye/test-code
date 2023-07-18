@@ -73,6 +73,20 @@ class CafeKioskTest {
         assertThat(cafeKiosk.getBeverages()).isEmpty();
     }
 
+    @Test
+    void calculateTotalPrice() {
+        CafeKiosk cafeKiosk = new CafeKiosk();
+        Americano americano = new Americano();
+        Latte latte = new Latte();
+
+        cafeKiosk.add(americano);
+        cafeKiosk.add(latte);
+        assertThat(cafeKiosk.getBeverages().size()).isEqualTo(2);
+
+        int totalPrice = cafeKiosk.calculateTotalPrice();
+        assertThat(totalPrice).isEqualTo(8500);
+    }
+
     /**
      * 항상 성공하는 테스트가 아니다..
      * 시간을 메서드 내부에서 생성하기 때문에 테스트를 수행하는 시간에 따라 성공할 수도.. 실패할 수도.. 있다..
