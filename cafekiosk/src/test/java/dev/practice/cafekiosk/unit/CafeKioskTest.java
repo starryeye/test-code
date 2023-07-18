@@ -2,7 +2,10 @@ package dev.practice.cafekiosk.unit;
 
 import dev.practice.cafekiosk.unit.beverage.Americano;
 import dev.practice.cafekiosk.unit.beverage.Latte;
+import dev.practice.cafekiosk.unit.order.Order;
 import org.junit.jupiter.api.Test;
+
+import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -68,5 +71,56 @@ class CafeKioskTest {
 
         cafeKiosk.clear();
         assertThat(cafeKiosk.getBeverages()).isEmpty();
+    }
+
+    /**
+     * 항상 성공하는 테스트가 아니다..
+     * 시간을 메서드 내부에서 생성하기 때문에 테스트를 수행하는 시간에 따라 성공할 수도.. 실패할 수도.. 있다..
+     * -> 현재 시간을 메서드 내부에서 만들고 있기 때문에 테스트하기 어렵다.
+     */
+    @Test
+    void createOrder() {
+        CafeKiosk cafeKiosk = new CafeKiosk();
+        Americano americano = new Americano();
+        cafeKiosk.add(americano);
+
+        cafeKiosk.createOrder();
+
+        assertThat(cafeKiosk.getBeverages().size()).isEqualTo(1);
+        assertThat(cafeKiosk.getBeverages().get(0).getName()).isEqualTo("아메리카노");
+    }
+
+    /**
+     * createOrder 메서드의 파라미터로 현재 시간을 받아서 테스트하기 쉬워졌다.
+     * -> 테스트하기 어려운 영역(현재 시간)을 외부로 빼냈다.
+     */
+    @Test
+    void createOrderWithCurrentTime() {
+        CafeKiosk cafeKiosk = new CafeKiosk();
+        Americano americano = new Americano();
+        cafeKiosk.add(americano);
+
+        //경계 값 10시
+        Order order = cafeKiosk.createOrder(LocalDateTime.of(2023, 7, 19, 10, 0));
+
+        assertThat(order.getBeverages().size()).isEqualTo(1);
+        assertThat(order.getBeverages().get(0).getName()).isEqualTo("아메리카노");
+    }
+
+    /**
+     * createOrder 메서드의 파라미터로 현재 시간을 받아서 테스트하기 쉬워졌다.
+     * -> 테스트하기 어려운 영역(현재 시간)을 외부로 빼냈다.
+     */
+    @Test
+    void createOrderOutsideOpenTime() {
+        CafeKiosk cafeKiosk = new CafeKiosk();
+        Americano americano = new Americano();
+        cafeKiosk.add(americano);
+
+        //경계 값 9시 59분
+        assertThatThrownBy(() -> {
+            cafeKiosk.createOrder(LocalDateTime.of(2023, 7, 19, 9, 59));
+        }).isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("주문 시간이 아닙니다. 관리자에게 문의하세요.");
     }
 }
