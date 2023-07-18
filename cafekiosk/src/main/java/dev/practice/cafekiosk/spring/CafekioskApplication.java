@@ -1,4 +1,4 @@
-package dev.practice.cafekiosk;
+package dev.practice.cafekiosk.spring;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
