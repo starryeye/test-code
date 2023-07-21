@@ -17,7 +17,7 @@ public class ProductService {
 
     public List<ProductResponse> getProductSelling() {
 
-        List<Product> products = productRepository.findBySellingTypeIn(ProductSellingStatus.forDisplay());
+        List<Product> products = productRepository.findBySellingStatusIn(ProductSellingStatus.forDisplay());
 
         return products.stream()
                 .map(ProductResponse::of)
