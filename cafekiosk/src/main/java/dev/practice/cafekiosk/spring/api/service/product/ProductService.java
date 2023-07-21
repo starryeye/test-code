@@ -3,7 +3,7 @@ package dev.practice.cafekiosk.spring.api.service.product;
 import dev.practice.cafekiosk.spring.api.service.product.response.ProductResponse;
 import dev.practice.cafekiosk.spring.domain.product.Product;
 import dev.practice.cafekiosk.spring.domain.product.ProductRepository;
-import dev.practice.cafekiosk.spring.domain.product.ProductSellingType;
+import dev.practice.cafekiosk.spring.domain.product.ProductSellingStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +17,7 @@ public class ProductService {
 
     public List<ProductResponse> getProductSelling() {
 
-        List<Product> products = productRepository.findBySellingTypeIn(ProductSellingType.forDisplay());
+        List<Product> products = productRepository.findBySellingTypeIn(ProductSellingStatus.forDisplay());
 
         return products.stream()
                 .map(ProductResponse::of)

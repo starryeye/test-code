@@ -21,7 +21,7 @@ public class Product extends BaseEntity  {
     private ProductType type;
 
     @Enumerated(value = EnumType.STRING) // SELLING, HOLD, STOP_SELLING
-    private ProductSellingType sellingType;
+    private ProductSellingStatus sellingStatus;
 
     private String name;
     private int price;
