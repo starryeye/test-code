@@ -1,9 +1,22 @@
 package dev.practice.cafekiosk.spring.api.controller.order.request;
 
+import lombok.Builder;
+import lombok.Getter;
+
 import java.util.List;
 
-public record OrderCreateRequest(
+@Getter
+public class OrderCreateRequest {
 
-        List<String> productNumbers
-) {
+    private List<String> productNumbers;
+
+    /**
+     * 참고로..
+     * Record 는 @Builder 를 canonical constructor 에 적용할 수 있지만,
+     * 접근 지정자를 private 로 하지 못한다.
+     */
+    @Builder
+    private OrderCreateRequest(List<String> productNumbers) {
+        this.productNumbers = productNumbers;
+    }
 }
