@@ -16,10 +16,12 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
-    public void createProduct(ProductCreateRequest productCreateRequest) {
+    public ProductResponse createProduct(ProductCreateRequest productCreateRequest) {
 
         // productNumber 채번, DB 에서 가장 마지막 productNumber 를 조회하여 +1 해준다.
         String latestProductNumber = productRepository.findLatestProductNumber();
+
+        return null;
     }
 
     public List<ProductResponse> getProductSelling() {
