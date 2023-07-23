@@ -26,10 +26,10 @@ public class OrderService {
         List<String> productNumbers = orderCreateRequest.getProductNumbers();
 
         //product 조회
-        List<Product> duplicateProducts = findByProductsBy(productNumbers);
+        List<Product> products = findByProductsBy(productNumbers);
 
         //order 생성 및 저장
-        Order order = Order.create(duplicateProducts, registeredAt);
+        Order order = Order.create(products, registeredAt);
         Order savedOrder = orderRepository.save(order);
 
         return OrderResponse.of(savedOrder);

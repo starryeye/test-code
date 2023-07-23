@@ -89,6 +89,7 @@ class OrderServiceTest {
 
     }
 
+    //재고와 관련된 상품이란.. 병음료와 베이커리이다.
     @DisplayName("재고와 관련된 상품이 포함되어 있는 주문번호 리스트를 받아서 주문을 생성한다.")
     @Test
     void createOrderWithStock() {
