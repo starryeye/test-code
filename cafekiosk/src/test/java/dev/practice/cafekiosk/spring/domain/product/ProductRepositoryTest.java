@@ -77,4 +77,50 @@ class ProductRepositoryTest {
                         tuple("002", "카페라떼", HOLD)
                 );
     }
+
+    @DisplayName("상품번호 리스트로 상품들을 조회한다.")
+    @Test
+    void findAllByProductNumberIn() {
+
+        // given
+        Product product1 = Product.builder()
+                .productNumber("001")
+                .type(HANDMADE)
+                .sellingStatus(SELLING)
+                .name("아메리카노")
+                .price(4000)
+                .build();
+        Product product2 = Product.builder()
+                .productNumber("002")
+                .type(HANDMADE)
+                .sellingStatus(HOLD)
+                .name("카페라떼")
+                .price(4500)
+                .build();
+        Product product3 = Product.builder()
+                .productNumber("003")
+                .type(HANDMADE)
+                .sellingStatus(STOP_SELLING)
+                .name("팥빙수")
+                .price(7000)
+                .build();
+        productRepository.saveAll(List.of(product1, product2, product3));
+
+        // when
+        List<Product> products = productRepository.findAllByProductNumberIn(List.of("001", "002"));
+
+        // then
+        /**
+         * List 형태의 데이터를 검증할 때는 주로 아래와 같은 형태로 검증한다.
+         * - hasSize
+         * - extracting : 검증 대상 객체에서 작성한 필드 명의 값들을 빼온다.
+         * - containsExactlyInAnyOrder : 빼온 값들이 작성한 값들과 일치하는지 검증한다. (리스트의 순서는 무관)
+         */
+        assertThat(products).hasSize(2)
+                .extracting("productNumber", "name", "sellingStatus")
+                .containsExactlyInAnyOrder(
+                        tuple("001", "아메리카노", SELLING),
+                        tuple("002", "카페라떼", HOLD)
+                );
+    }
 }
