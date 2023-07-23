@@ -9,6 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,6 +21,7 @@ import static org.assertj.core.api.Assertions.tuple;
 import static org.junit.jupiter.api.Assertions.*;
 
 //@DataJpaTest // @DataJpaTest 는 Jpa 관련 빈만 등록된다. @Service 적용된 빈은 등록되지 않음
+@ActiveProfiles("test")
 @SpringBootTest
 class OrderServiceTest {
 
@@ -34,6 +36,8 @@ class OrderServiceTest {
     void createOrder() {
 
         // given
+        LocalDateTime registeredAt = LocalDateTime.now();
+
         Product product1 = createProduct("001", HANDMADE, 1000);
         Product product2 = createProduct("002", HANDMADE, 3000);
         Product product3 = createProduct("003", HANDMADE, 5000);
@@ -44,13 +48,13 @@ class OrderServiceTest {
                 .build();
 
         // when
-        OrderResponse orderResponse = orderService.createOrder(orderCreateRequest, LocalDateTime.now());
+        OrderResponse orderResponse = orderService.createOrder(orderCreateRequest, registeredAt);
 
         // then
         assertThat(orderResponse.id()).isNotNull();
         assertThat(orderResponse)
-                .extracting("totalPrice", "registerAt")
-                .contains(4000, LocalDateTime.now());
+                .extracting("totalPrice", "registeredAt")
+                .contains(4000, registeredAt);
         assertThat(orderResponse.products()).hasSize(2)
                 .extracting("productNumber", "price")
                 .containsExactlyInAnyOrder(

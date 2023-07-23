@@ -26,8 +26,10 @@ public class OrderService {
         //product 조회
         List<Product> products = productRepository.findAllByProductNumberIn(productNumbers);
 
-        Order.create(products, registeredAt);
+        //order 생성 및 저장
+        Order order = Order.create(products, registeredAt);
+        Order savedOrder = orderRepository.save(order);
 
-        return null;
+        return OrderResponse.of(savedOrder);
     }
 }
