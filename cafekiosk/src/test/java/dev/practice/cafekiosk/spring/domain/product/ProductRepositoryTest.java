@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * - 추후 다른 기술로 변경될때도 사용하여 기능적으로 동일성을 보장시켜준다.
  */
 @ActiveProfiles("test") // profile 지정
-@DataJpaTest // JPA 기술 관련 빈들만 주입한 컨테이너를 띄운다. @SpringBootTest 보다 가볍다.
+@DataJpaTest // JPA 기술 관련 빈들만 주입한 컨테이너를 띄운다. @SpringBootTest 보다 가볍다. @Transactional 포함
 class ProductRepositoryTest {
 
     @Autowired

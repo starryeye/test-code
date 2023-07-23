@@ -2,9 +2,12 @@ package dev.practice.cafekiosk.spring.api.service.order;
 
 import dev.practice.cafekiosk.spring.api.controller.order.request.OrderCreateRequest;
 import dev.practice.cafekiosk.spring.api.service.order.response.OrderResponse;
+import dev.practice.cafekiosk.spring.domain.order.OrderRepository;
+import dev.practice.cafekiosk.spring.domain.orderproduct.OrderProductRepository;
 import dev.practice.cafekiosk.spring.domain.product.Product;
 import dev.practice.cafekiosk.spring.domain.product.ProductRepository;
 import dev.practice.cafekiosk.spring.domain.product.ProductType;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +32,22 @@ class OrderServiceTest {
     private ProductRepository productRepository;
 
     @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private OrderProductRepository orderProductRepository;
+
+    @Autowired
     private OrderService orderService;
+
+    //TODO, deleteAll() 과 차이점
+    @AfterEach
+    void tearDown() {
+        orderProductRepository.deleteAllInBatch();
+        productRepository.deleteAllInBatch();
+        orderRepository.deleteAllInBatch();
+
+    }
 
     @DisplayName("주문번호 리스트를 받아서 주문을 생성한다.")
     @Test

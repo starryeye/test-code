@@ -26,19 +26,26 @@ public class OrderService {
         List<String> productNumbers = orderCreateRequest.getProductNumbers();
 
         //product 조회
-        List<Product> products = productRepository.findAllByProductNumberIn(productNumbers);
-
-        //중복 허용 처리
-        Map<String, Product> productMap = products.stream()
-                .collect(Collectors.toMap(Product::getProductNumber, product -> product));
-        List<Product> duplicateProducts = productNumbers.stream()
-                .map(productMap::get)
-                .toList();
+        List<Product> duplicateProducts = findByProductsBy(productNumbers);
 
         //order 생성 및 저장
         Order order = Order.create(duplicateProducts, registeredAt);
         Order savedOrder = orderRepository.save(order);
 
         return OrderResponse.of(savedOrder);
+    }
+
+    private List<Product> findByProductsBy(List<String> productNumbers) {
+        //product 조회
+        List<Product> products = productRepository.findAllByProductNumberIn(productNumbers);
+
+        //중복 허용을 위한 map 생성
+        Map<String, Product> productMap = products.stream()
+                .collect(Collectors.toMap(Product::getProductNumber, product -> product));
+
+        //중복 처리된 product
+        return productNumbers.stream()
+                .map(productMap::get)
+                .toList();
     }
 }
