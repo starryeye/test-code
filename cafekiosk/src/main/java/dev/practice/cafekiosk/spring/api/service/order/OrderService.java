@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,8 +28,15 @@ public class OrderService {
         //product 조회
         List<Product> products = productRepository.findAllByProductNumberIn(productNumbers);
 
+        //중복 허용 처리
+        Map<String, Product> productMap = products.stream()
+                .collect(Collectors.toMap(Product::getProductNumber, product -> product));
+        List<Product> duplicateProducts = productNumbers.stream()
+                .map(productMap::get)
+                .toList();
+
         //order 생성 및 저장
-        Order order = Order.create(products, registeredAt);
+        Order order = Order.create(duplicateProducts, registeredAt);
         Order savedOrder = orderRepository.save(order);
 
         return OrderResponse.of(savedOrder);
