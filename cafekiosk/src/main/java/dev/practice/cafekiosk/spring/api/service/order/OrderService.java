@@ -9,6 +9,7 @@ import dev.practice.cafekiosk.spring.domain.product.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -18,14 +19,14 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
 
-    public OrderResponse createOrder(OrderCreateRequest orderCreateRequest) {
+    public OrderResponse createOrder(OrderCreateRequest orderCreateRequest, LocalDateTime registeredAt) {
 
         List<String> productNumbers = orderCreateRequest.getProductNumbers();
 
         //product 조회
         List<Product> products = productRepository.findAllByProductNumberIn(productNumbers);
 
-        Order.create(products);
+        Order.create(products, registeredAt);
 
         return null;
     }
