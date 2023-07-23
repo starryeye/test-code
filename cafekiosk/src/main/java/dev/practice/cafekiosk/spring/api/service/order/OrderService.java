@@ -28,6 +28,7 @@ public class OrderService {
     private final ProductRepository productRepository;
     private final StockRepository stockRepository;
 
+    //TODO, 동시성 문제
     public OrderResponse createOrder(OrderCreateRequest orderCreateRequest, LocalDateTime registeredAt) {
 
         List<String> productNumbers = orderCreateRequest.getProductNumbers();
@@ -35,20 +36,26 @@ public class OrderService {
         //product 조회
         List<Product> products = findByProductsBy(productNumbers);
 
+        //재고 차감
+        deductStockQuantities(products);
+
+
+        //order 생성 및 저장
+        Order order = Order.create(products, registeredAt);
+        Order savedOrder = orderRepository.save(order);
+
+        return OrderResponse.of(savedOrder);
+    }
+
+    private void deductStockQuantities(List<Product> products) {
+
         //재고 차감이 필요한 상품 필터링
-        List<String> stockProductNumbers = products.stream()
-                .filter(product -> ProductType.containsStockType(product.getType()))
-                .map(Product::getProductNumber)
-                .toList();
+        List<String> stockProductNumbers = extractStockProductNumbers(products);
 
         //재고 엔티티 조회
-        List<Stock> stocks = stockRepository.findAllByProductNumberIn(stockProductNumbers);
-        Map<String, Stock> stockMap = stocks.stream()
-                .collect(Collectors.toMap(Stock::getProductNumber, stock -> stock));
-
+        Map<String, Stock> stockMap = createStockMapBy(stockProductNumbers);
         //상품별 카운팅
-        Map<String, Long> productCountingMap = stockProductNumbers.stream()
-                .collect(Collectors.groupingBy(p -> p, Collectors.counting()));
+        Map<String, Long> productCountingMap = createCountingMapBy(stockProductNumbers);
 
         //재고 차감 시도
         for (String stockProductNumber : new HashSet<>(stockProductNumbers)) {
@@ -61,13 +68,6 @@ public class OrderService {
 
             stock.deductQuantity(quantity);
         }
-        
-
-        //order 생성 및 저장
-        Order order = Order.create(products, registeredAt);
-        Order savedOrder = orderRepository.save(order);
-
-        return OrderResponse.of(savedOrder);
     }
 
     private List<Product> findByProductsBy(List<String> productNumbers) {
@@ -82,5 +82,25 @@ public class OrderService {
         return productNumbers.stream()
                 .map(productMap::get)
                 .toList();
+    }
+
+    private static List<String> extractStockProductNumbers(List<Product> products) {
+        return products.stream()
+                .filter(product -> ProductType.containsStockType(product.getType()))
+                .map(Product::getProductNumber)
+                .toList();
+    }
+
+    private Map<String, Stock> createStockMapBy(List<String> stockProductNumbers) {
+        List<Stock> stocks = stockRepository.findAllByProductNumberIn(stockProductNumbers);
+
+        return stocks.stream()
+                .collect(Collectors.toMap(Stock::getProductNumber, stock -> stock));
+    }
+
+    private static Map<String, Long> createCountingMapBy(List<String> stockProductNumbers) {
+
+        return stockProductNumbers.stream()
+                .collect(Collectors.groupingBy(p -> p, Collectors.counting()));
     }
 }
