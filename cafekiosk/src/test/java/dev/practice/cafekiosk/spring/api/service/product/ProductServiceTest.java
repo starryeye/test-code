@@ -6,6 +6,7 @@ import dev.practice.cafekiosk.spring.domain.product.Product;
 import dev.practice.cafekiosk.spring.domain.product.ProductRepository;
 import dev.practice.cafekiosk.spring.domain.product.ProductSellingStatus;
 import dev.practice.cafekiosk.spring.domain.product.ProductType;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,11 @@ class ProductServiceTest {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @AfterEach
+    void tearDown() {
+        productRepository.deleteAllInBatch();
+    }
 
     /**
      * ProductServiceTest 는 비즈니스 로직이 거의 없어서 ProductRepositoryTest 와 비슷하다.
