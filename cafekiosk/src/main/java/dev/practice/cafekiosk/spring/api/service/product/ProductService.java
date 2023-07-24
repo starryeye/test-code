@@ -18,10 +18,26 @@ public class ProductService {
 
     public ProductResponse createProduct(ProductCreateRequest productCreateRequest) {
 
-        // productNumber 채번, DB 에서 가장 마지막 productNumber 를 조회하여 +1 해준다.
-        String latestProductNumber = productRepository.findLatestProductNumber();
+        String nextProductNumber = createNextProductNumber();
 
-        return null;
+        return ProductResponse.builder()
+                .productNumber(nextProductNumber)
+                .type(productCreateRequest.getType())
+                .sellingStatus(productCreateRequest.getSellingStatus())
+                .name(productCreateRequest.getName())
+                .price(productCreateRequest.getPrice())
+                .build();
+    }
+
+    private String createNextProductNumber() {
+        // productNumber 채번, DB 에서 가장 마지막 productNumber 를 조회하여 +1 해준다.
+
+        String latestProductNumber = productRepository.findLatestProductNumber();
+        int latestProductNumberInt = Integer.parseInt(latestProductNumber);
+
+        int nextProductNumber = latestProductNumberInt + 1;
+
+        return String.format("%03d", nextProductNumber);
     }
 
     public List<ProductResponse> getProductSelling() {
