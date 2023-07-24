@@ -18,6 +18,7 @@ import java.util.List;
 import static dev.practice.cafekiosk.spring.domain.product.ProductSellingStatus.*;
 import static dev.practice.cafekiosk.spring.domain.product.ProductType.HANDMADE;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ActiveProfiles("test")
@@ -58,8 +59,17 @@ class ProductServiceTest {
         ProductResponse savedProduct = productService.createProduct(productCreateRequest);
 
         // then
-        assertThat(savedProduct).extracting("productNumber", "type", "sellingStatus", "name", "price")
+        assertThat(savedProduct)
+                .extracting("productNumber", "type", "sellingStatus", "name", "price")
                 .contains("002", HANDMADE, SELLING, "카푸치노", 5000);
+
+        List<Product> products = productRepository.findAll();
+        assertThat(products).hasSize(2)
+                .extracting("productNumber", "type", "sellingStatus", "name", "price")
+                .containsExactlyInAnyOrder(
+                        tuple("001", HANDMADE, SELLING, "아메리카노", 4000),
+                        tuple("002", HANDMADE, SELLING, "카푸치노", 5000)
+                );
     }
 
 
@@ -81,6 +91,13 @@ class ProductServiceTest {
         // then
         assertThat(savedProduct).extracting("productNumber", "type", "sellingStatus", "name", "price")
                 .contains("001", HANDMADE, SELLING, "카푸치노", 5000);
+
+        List<Product> products = productRepository.findAll();
+        assertThat(products).hasSize(1)
+                .extracting("productNumber", "type", "sellingStatus", "name", "price")
+                .contains(
+                        tuple("001", HANDMADE, SELLING, "카푸치노", 5000)
+                );
     }
 
     private Product createProduct(String productNumber, ProductType type, ProductSellingStatus sellingStatus, String name, int price) {

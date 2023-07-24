@@ -16,19 +16,18 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
+    //TODO, 동시성 문제
     public ProductResponse createProduct(ProductCreateRequest productCreateRequest) {
 
         String nextProductNumber = createNextProductNumber();
 
-        return ProductResponse.builder()
-                .productNumber(nextProductNumber)
-                .type(productCreateRequest.getType())
-                .sellingStatus(productCreateRequest.getSellingStatus())
-                .name(productCreateRequest.getName())
-                .price(productCreateRequest.getPrice())
-                .build();
+        Product product = productCreateRequest.toEntity(nextProductNumber);
+        Product savedProduct = productRepository.save(product);
+
+        return ProductResponse.of(savedProduct);
     }
 
+    //UUID 로 하면 애초에 동시성 문제 없음
     private String createNextProductNumber() {
         // productNumber 채번, DB 에서 가장 마지막 productNumber 를 조회하여 +1 해준다.
 
