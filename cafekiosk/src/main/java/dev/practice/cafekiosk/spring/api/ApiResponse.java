@@ -1,7 +1,9 @@
 package dev.practice.cafekiosk.spring.api;
 
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+@Getter
 public class ApiResponse<T> {
 
     private T data;
