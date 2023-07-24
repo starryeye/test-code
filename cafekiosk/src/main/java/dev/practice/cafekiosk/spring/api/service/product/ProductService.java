@@ -33,6 +33,11 @@ public class ProductService {
         // productNumber 채번, DB 에서 가장 마지막 productNumber 를 조회하여 +1 해준다.
 
         String latestProductNumber = productRepository.findLatestProductNumber();
+
+        if(latestProductNumber == null) {
+            return "001";
+        }
+
         int latestProductNumberInt = Integer.parseInt(latestProductNumber);
 
         int nextProductNumber = latestProductNumberInt + 1;
