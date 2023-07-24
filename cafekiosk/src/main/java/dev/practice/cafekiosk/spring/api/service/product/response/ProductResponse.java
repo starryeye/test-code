@@ -6,6 +6,10 @@ import dev.practice.cafekiosk.spring.domain.product.Product;
 import dev.practice.cafekiosk.spring.domain.product.ProductSellingStatus;
 import dev.practice.cafekiosk.spring.domain.product.ProductType;
 
+/**
+ * record Type 은 final 로 값이 강제되기 때문에 TDD 에서 유연하지 않다..
+ * 그래서 class 로 함..
+ */
 @Getter
 public class ProductResponse {
 
