@@ -5,7 +5,7 @@ How to write test code
 - TDD 로 진행하는 간단한 카페 키오스크 서비스
 
 ## project
-- kiosk
+- cafekiosk
 
 ## dependency
 - Spring Boot
