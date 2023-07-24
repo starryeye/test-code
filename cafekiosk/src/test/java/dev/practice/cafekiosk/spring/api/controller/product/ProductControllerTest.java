@@ -66,4 +66,28 @@ class ProductControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
+    @DisplayName("신규 상품을 등록할 때 상품 타입은 필수 값이다.")
+    @Test
+    void createProductWithoutType() throws Exception {
+
+        // given
+        ProductCreateRequest request = ProductCreateRequest.builder()
+                .sellingStatus(ProductSellingStatus.SELLING)
+                .name("아메리카노")
+                .price(4000)
+                .build();
+
+        // when // then
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/products/new")
+                        .content(objectMapper.writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(400))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value("BAD_REQUEST"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("상품 타입은 필수입니다."))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data").isEmpty());
+    }
+
 }
