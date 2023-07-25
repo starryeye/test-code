@@ -1,6 +1,6 @@
 package dev.practice.cafekiosk.spring.api.service.product;
 
-import dev.practice.cafekiosk.spring.api.controller.product.request.ProductCreateRequest;
+import dev.practice.cafekiosk.spring.api.service.product.request.ProductCreateServiceRequest;
 import dev.practice.cafekiosk.spring.api.service.product.response.ProductResponse;
 import dev.practice.cafekiosk.spring.domain.product.Product;
 import dev.practice.cafekiosk.spring.domain.product.ProductRepository;
@@ -31,11 +31,11 @@ public class ProductService {
 
     //TODO, 동시성 문제
     @Transactional
-    public ProductResponse createProduct(ProductCreateRequest productCreateRequest) {
+    public ProductResponse createProduct(ProductCreateServiceRequest productCreateServiceRequest) {
 
         String nextProductNumber = createNextProductNumber();
 
-        Product product = productCreateRequest.toEntity(nextProductNumber);
+        Product product = productCreateServiceRequest.toEntity(nextProductNumber);
         Product savedProduct = productRepository.save(product);
 
         return ProductResponse.of(savedProduct);

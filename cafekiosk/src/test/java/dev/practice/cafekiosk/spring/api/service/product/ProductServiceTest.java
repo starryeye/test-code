@@ -1,6 +1,7 @@
 package dev.practice.cafekiosk.spring.api.service.product;
 
 import dev.practice.cafekiosk.spring.api.controller.product.request.ProductCreateRequest;
+import dev.practice.cafekiosk.spring.api.service.product.request.ProductCreateServiceRequest;
 import dev.practice.cafekiosk.spring.api.service.product.response.ProductResponse;
 import dev.practice.cafekiosk.spring.domain.product.Product;
 import dev.practice.cafekiosk.spring.domain.product.ProductRepository;
@@ -48,7 +49,7 @@ class ProductServiceTest {
         Product product = createProduct("001", HANDMADE, SELLING, "아메리카노", 4000);
         productRepository.save(product);
 
-        ProductCreateRequest productCreateRequest = ProductCreateRequest.builder()
+        ProductCreateServiceRequest productCreateServiceRequest = ProductCreateServiceRequest.builder()
                 .type(HANDMADE)
                 .sellingStatus(SELLING)
                 .name("카푸치노")
@@ -56,7 +57,7 @@ class ProductServiceTest {
                 .build();
 
         // when
-        ProductResponse savedProduct = productService.createProduct(productCreateRequest);
+        ProductResponse savedProduct = productService.createProduct(productCreateServiceRequest);
 
         // then
         assertThat(savedProduct)
@@ -78,7 +79,7 @@ class ProductServiceTest {
     void createProductWhenProductsIsEmpty() {
 
         // given
-        ProductCreateRequest productCreateRequest = ProductCreateRequest.builder()
+        ProductCreateServiceRequest productCreateServiceRequest = ProductCreateServiceRequest.builder()
                 .type(HANDMADE)
                 .sellingStatus(SELLING)
                 .name("카푸치노")
@@ -86,7 +87,7 @@ class ProductServiceTest {
                 .build();
 
         // when
-        ProductResponse savedProduct = productService.createProduct(productCreateRequest);
+        ProductResponse savedProduct = productService.createProduct(productCreateServiceRequest);
 
         // then
         assertThat(savedProduct).extracting("productNumber", "type", "sellingStatus", "name", "price")

@@ -6,7 +6,6 @@ import dev.practice.cafekiosk.spring.api.service.product.ProductService;
 import dev.practice.cafekiosk.spring.api.service.product.response.ProductResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,7 +21,7 @@ public class ProductController {
 
     @PostMapping("/api/v1/products/new")
     public ApiResponse<ProductResponse> createProduct(@Valid @RequestBody ProductCreateRequest productCreateRequest) {
-        return ApiResponse.ok(productService.createProduct(productCreateRequest));
+        return ApiResponse.ok(productService.createProduct(productCreateRequest.toServiceRequest()));
     }
 
     @GetMapping("/api/v1/products/selling")

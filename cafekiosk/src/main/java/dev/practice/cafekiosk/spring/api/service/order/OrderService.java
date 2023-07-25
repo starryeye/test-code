@@ -1,6 +1,6 @@
 package dev.practice.cafekiosk.spring.api.service.order;
 
-import dev.practice.cafekiosk.spring.api.controller.order.request.OrderCreateRequest;
+import dev.practice.cafekiosk.spring.api.service.order.request.OrderCreateServiceRequest;
 import dev.practice.cafekiosk.spring.api.service.order.response.OrderResponse;
 import dev.practice.cafekiosk.spring.domain.order.Order;
 import dev.practice.cafekiosk.spring.domain.order.OrderRepository;
@@ -29,9 +29,9 @@ public class OrderService {
     private final StockRepository stockRepository;
 
     //TODO, 동시성 문제
-    public OrderResponse createOrder(OrderCreateRequest orderCreateRequest, LocalDateTime registeredAt) {
+    public OrderResponse createOrder(OrderCreateServiceRequest orderCreateServiceRequest, LocalDateTime registeredAt) {
 
-        List<String> productNumbers = orderCreateRequest.getProductNumbers();
+        List<String> productNumbers = orderCreateServiceRequest.getProductNumbers();
 
         //product 조회
         List<Product> products = findByProductsBy(productNumbers);
