@@ -17,7 +17,7 @@ public class OrderStatisticsService {
     private final OrderRepository orderRepository;
     private final MailService mailService;
 
-    public void sendOrderStatisticsMail(LocalDate orderDate, String email) {
+    public boolean sendOrderStatisticsMail(LocalDate orderDate, String email) {
 
         // 해당 일자에 결제완료된 주문들을 가져온다.
         List<Order> orders = orderRepository.findOrdersBy(
@@ -36,11 +36,13 @@ public class OrderStatisticsService {
                 "no-reply@practice.dev",
                 email,
                 String.format("[매출 통계] %s", orderDate),
-                String.format("총 매출 합계는 %s 입니다.", totalPrice)
+                String.format("총 매출 합계는 %s원 입니다.", totalPrice)
         );
 
         if(!result) {
             throw new RuntimeException("매출 통계 메일 전송에 실패했습니다.");
         }
+
+        return true;
     }
 }

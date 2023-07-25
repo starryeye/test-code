@@ -11,7 +11,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query("""
             select o
             from Order o
-            where o.registeredAt >= :startDateTime and o.registeredAt < endDateTime and o.orderStatus = :orderStatus
+            where o.registeredAt >= :startDateTime and o.registeredAt < :endDateTime and o.orderStatus = :orderStatus
             """)
     List<Order> findOrdersBy(LocalDateTime startDateTime, LocalDateTime endDateTime, OrderStatus orderStatus);
 }
