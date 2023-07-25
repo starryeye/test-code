@@ -1,5 +1,6 @@
 package dev.practice.cafekiosk.spring.api.service.order;
 
+import dev.practice.cafekiosk.spring.client.mail.MailSendClient;
 import dev.practice.cafekiosk.spring.domain.history.mail.MailSendHistory;
 import dev.practice.cafekiosk.spring.domain.history.mail.MailSendHistoryRepository;
 import dev.practice.cafekiosk.spring.domain.order.Order;
@@ -12,8 +13,11 @@ import dev.practice.cafekiosk.spring.domain.product.ProductType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -42,6 +46,9 @@ class OrderStatisticsServiceTest {
     @Autowired
     private MailSendHistoryRepository mailSendHistoryRepository;
 
+    @MockBean
+    private MailSendClient mailSendClient;
+
     //TODO 이거 대신 @Transactional 을 써보자
     @AfterEach
     void tearDown() {
@@ -68,6 +75,21 @@ class OrderStatisticsServiceTest {
         Order order2 = createPaymentCompletedOrder(now, products);
         Order order3 = createPaymentCompletedOrder(LocalDateTime.of(2023, 7, 25, 23, 59, 59), products);
         Order order4 = createPaymentCompletedOrder(LocalDateTime.of(2023, 7, 26, 0, 0), products);
+
+        /**
+         * stubbing
+         * 아래와 같이 Mock 객체에 원하는 행위를 정해놓는 것을 stubbing 이라 한다.
+         *
+         * 외부 시스템이 실패하고 있어도 이 테스트의 목적과는 상관없으므로 성공해야한다.
+         */
+        Mockito.when(
+                mailSendClient.sendMail(
+                        ArgumentMatchers.any(String.class),
+                        ArgumentMatchers.any(String.class),
+                        ArgumentMatchers.any(String.class),
+                        ArgumentMatchers.any(String.class)
+                )
+        ).thenReturn(true);
 
         // when
         boolean result = orderStatisticsService.sendOrderStatisticsMail(LocalDate.of(2023, 7, 25), "test@test.com");

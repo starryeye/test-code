@@ -10,6 +10,12 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * 해당 서비스에는 @Transactional 을 적용하지 않는다.
+ * - 해당 로직에는 DB 조회, 저장이 존재하는데 Repository 단계에서 각각 @Transactional 이 걸려있어서 JPA 기능에는 문제없고
+ * - 변경감지 사용하지 않으며, History DB 에는 단건 저장으로 쓰기 지연 기능 필요 없다.
+ * - 해당 서비스에 @Transactional 을 적용하면 메일 전송에 소요되는 시간 까지 포함하여 DB 커넥션 자원을 차지하게 되므로 좋지 못함.
+ */
 @Service
 @RequiredArgsConstructor
 public class OrderStatisticsService {
