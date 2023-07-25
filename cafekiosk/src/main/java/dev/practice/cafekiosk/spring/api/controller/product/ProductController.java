@@ -26,7 +26,7 @@ public class ProductController {
     }
 
     @GetMapping("/api/v1/products/selling")
-    public List<ProductResponse> getProductsSelling() {
-        return productService.getProductSelling();
+    public ApiResponse<List<ProductResponse>> getProductsSelling() {
+        return ApiResponse.ok(productService.getProductSelling());
     }
 }

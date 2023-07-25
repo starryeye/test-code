@@ -1,13 +1,14 @@
 package dev.practice.cafekiosk.spring.api.controller.product;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.practice.cafekiosk.spring.api.controller.product.request.ProductCreateRequest;
 import dev.practice.cafekiosk.spring.api.service.product.ProductService;
+import dev.practice.cafekiosk.spring.api.service.product.response.ProductResponse;
 import dev.practice.cafekiosk.spring.domain.product.ProductSellingStatus;
 import dev.practice.cafekiosk.spring.domain.product.ProductType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -16,6 +17,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -161,5 +164,29 @@ class ProductControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.status").value("BAD_REQUEST"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("상품가격은 양수여야 합니다."))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data").isEmpty());
+    }
+
+    /**
+     * 해당 테스트에서 값을 저장해서 값을 조회하고 값을 확인하고 해볼 수 있겠지만..
+     * 서비스 레이어에서 이미 다 한 테스트이다.
+     * 따라서 아래 테스트에서는 Array 형태가 잘 오는가.. 에 대해서만 검증을 진행한다.
+     */
+    @DisplayName("판매상품을 조회한다.")
+    @Test
+    void getProductsSelling() throws Exception {
+
+        // given
+        List<ProductResponse> result = List.of();
+        Mockito.when(productService.getProductSelling()).thenReturn(result);
+
+        // when // then
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/products/selling")
+                )
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(200))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value("OK"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").isEmpty()) //null
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data").isArray());
     }
 }
