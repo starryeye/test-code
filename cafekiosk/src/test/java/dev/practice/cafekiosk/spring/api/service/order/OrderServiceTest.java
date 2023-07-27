@@ -183,6 +183,8 @@ class OrderServiceTest {
         Product product3 = createProduct("003", HANDMADE, 5000);
         productRepository.saveAll(List.of(product1, product2, product3));
 
+        //create 메서드는 팩토리 메서드인데.. 이는 특정 목적을 가진 생성 메서드이다. 따라서 순수한 생성자나 빌더를 사용하는 편이 좋다.
+        //테스트 환경의 독립성을 보장해야한다.
         Stock stock1 = Stock.create("001", 1);
         Stock stock2 = Stock.create("002", 2);
         stockRepository.saveAll(List.of(stock1, stock2));
