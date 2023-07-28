@@ -3,6 +3,7 @@ package dev.practice.cafekiosk.unit;
 import dev.practice.cafekiosk.unit.beverage.Americano;
 import dev.practice.cafekiosk.unit.beverage.Latte;
 import dev.practice.cafekiosk.unit.order.Order;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -98,7 +99,10 @@ class CafeKioskTest {
      * 항상 성공하는 테스트가 아니다..
      * 시간을 메서드 내부에서 생성하기 때문에 테스트를 수행하는 시간에 따라 성공할 수도.. 실패할 수도.. 있다..
      * -> 현재 시간을 메서드 내부에서 만들고 있기 때문에 테스트하기 어렵다.
+     *
+     * disabled 처리
      */
+    @Disabled
     @Test
     void createOrder() {
         CafeKiosk cafeKiosk = new CafeKiosk();

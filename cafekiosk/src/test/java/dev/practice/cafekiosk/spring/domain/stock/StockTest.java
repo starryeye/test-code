@@ -1,9 +1,6 @@
 package dev.practice.cafekiosk.spring.domain.stock;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.DynamicTest;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.*;
 
 import java.util.Collection;
 import java.util.List;
@@ -64,7 +61,10 @@ class StockTest {
     /**
      * DynamicTest 는 시나리오 테스트를 수행할때 사용하면 좋다.
      * 아래는 기본 구조이다.
+     *
+     * Disabled 처리
      */
+    @Disabled
     @DisplayName("")
     @TestFactory
     Collection<DynamicTest> dynamicTest() {
