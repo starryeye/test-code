@@ -1,38 +1,26 @@
 package dev.practice.cafekiosk.spring.api.controller.product;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.practice.cafekiosk.spring.ControllerTestSupport;
 import dev.practice.cafekiosk.spring.api.controller.product.request.ProductCreateRequest;
-import dev.practice.cafekiosk.spring.api.service.product.ProductService;
 import dev.practice.cafekiosk.spring.api.service.product.response.ProductResponse;
 import dev.practice.cafekiosk.spring.domain.product.ProductSellingStatus;
 import dev.practice.cafekiosk.spring.domain.product.ProductType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 /**
  * @WebMvcTest 는 Controller 영역 관련 bean 들만 등록한 container 와 MockMvc 빈을 제공한다.
  */
-@WebMvcTest(controllers = ProductController.class)
-class ProductControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+class ProductControllerTest extends ControllerTestSupport {
 
-    @Autowired
-    private ObjectMapper objectMapper;
 
     /**
      * Service 쪽 빈들은 등록되지 않고 해당 빈은 Mock 으로 대체하여 진행한다.
@@ -44,9 +32,11 @@ class ProductControllerTest {
      * @MockBean 으로 등록해줘야하는 것을 알수 있다..
      *
      * 아마 ProductService 의 행동을 정해주지 않으면 null 로 리턴하는듯..
+     *
+     * 상위 클래스로 이동
      */
-    @MockBean
-    private ProductService productService;
+//    @MockBean
+//    private ProductService productService;
 
     @DisplayName("신규 상품을 등록한다.")
     @Test

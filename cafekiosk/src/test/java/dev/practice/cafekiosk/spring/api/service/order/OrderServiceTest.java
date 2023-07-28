@@ -1,6 +1,6 @@
 package dev.practice.cafekiosk.spring.api.service.order;
 
-import dev.practice.cafekiosk.spring.api.controller.order.request.OrderCreateRequest;
+import dev.practice.cafekiosk.spring.IntegrationTestSupport;
 import dev.practice.cafekiosk.spring.api.service.order.request.OrderCreateServiceRequest;
 import dev.practice.cafekiosk.spring.api.service.order.response.OrderResponse;
 import dev.practice.cafekiosk.spring.domain.order.OrderRepository;
@@ -14,9 +14,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,10 +24,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 //@DataJpaTest
-@ActiveProfiles("test")
-@Transactional
-@SpringBootTest
-class OrderServiceTest {
+class OrderServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private ProductRepository productRepository;
@@ -47,14 +41,14 @@ class OrderServiceTest {
     @Autowired
     private OrderService orderService;
 
-    //TODO, deleteAll() 과 차이점
-//    @AfterEach
-//    void tearDown() {
-//        orderProductRepository.deleteAllInBatch();
-//        productRepository.deleteAllInBatch();
-//        orderRepository.deleteAllInBatch();
-//        stockRepository.deleteAllInBatch();
-//    }
+
+    @AfterEach
+    void tearDown() {
+        orderProductRepository.deleteAllInBatch();
+        productRepository.deleteAllInBatch();
+        orderRepository.deleteAllInBatch();
+        stockRepository.deleteAllInBatch();
+    }
 
     @DisplayName("주문번호 리스트를 받아서 주문을 생성한다.")
     @Test

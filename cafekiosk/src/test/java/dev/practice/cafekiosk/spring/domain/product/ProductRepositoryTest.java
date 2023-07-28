@@ -1,10 +1,12 @@
 package dev.practice.cafekiosk.spring.domain.product;
 
+import dev.practice.cafekiosk.spring.IntegrationTestSupport;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -23,9 +25,10 @@ import static org.assertj.core.api.Assertions.tuple;
  * 제대로된 쿼리로 날라가는가를 보장하기 위해 테스트 코드를 해줘야한다.
  * - 추후 다른 기술로 변경될때도 사용하여 기능적으로 동일성을 보장시켜준다.
  */
-@ActiveProfiles("test") // profile 지정
-@DataJpaTest // JPA 기술 관련 빈들만 주입한 컨테이너를 띄운다. @SpringBootTest 보다 가볍다. @Transactional 포함
-class ProductRepositoryTest {
+//@ActiveProfiles("test") // profile 지정
+//@DataJpaTest // JPA 기술 관련 빈들만 주입한 컨테이너를 띄운다. @SpringBootTest 보다 가볍다. @Transactional 포함
+@Transactional
+class ProductRepositoryTest extends IntegrationTestSupport  {
 
     @Autowired
     private ProductRepository productRepository;
