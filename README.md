@@ -24,6 +24,9 @@ How to write test code
 - 신규 상품 등록시 상품명, 상품 타입, 판매 상태, 가격 등을 입력받는다.
 - 지정된 날짜의 총 매출 금액을 계산하여 메일로 보내는 기능
 
+## API 명세
+- localhost:8080/docs/index.html
+
 ## project
 - cafekiosk
 
@@ -36,3 +39,6 @@ How to write test code
   - AssertJ
   - JUnit5
   - Mockito
+- Spring RestDocs
+  - asciidocs
+  - mockmvc
