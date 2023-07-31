@@ -35,6 +35,7 @@ How to write test code
 - Spring Boot
 - Spring Web
 - Spring Data Jpa
+- Spring Validation
 - h2
 - Spring Boot Test
   - AssertJ
