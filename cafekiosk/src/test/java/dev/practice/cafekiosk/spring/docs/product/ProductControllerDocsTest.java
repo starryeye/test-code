@@ -21,10 +21,14 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.List;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ProductControllerDocsTest extends RestDocsSupport {
@@ -44,7 +48,7 @@ public class ProductControllerDocsTest extends RestDocsSupport {
      * ProductControllerTest 와 기본적으로 구조는 같다.
      * 코드상 stubbing 을 추가로 해줘야 응답을 반환해줄 수 있으므로 stubbing 을 해줬다.
      * MockMvcRestDocumentation 을 통해서 문서를 만드는데 필요한 id, 요청응답 데이터 정의를 해준다.
-     *
+     * <p>
      * Gradle > documentation > asciidoctor 실행
      */
     @DisplayName("신규 상품을 등록하는 API")
@@ -117,6 +121,69 @@ public class ProductControllerDocsTest extends RestDocsSupport {
                                 PayloadDocumentation.fieldWithPath("data.name").type(JsonFieldType.STRING)
                                         .description("상품 이름"),
                                 PayloadDocumentation.fieldWithPath("data.price").type(JsonFieldType.NUMBER)
+                                        .description("상품 가격")
+                        )
+                ));
+    }
+
+    @DisplayName("판매 상품을 조회하는 API")
+    @Test
+    void getProductsSelling() throws Exception {
+
+        // given
+        ProductResponse productResponse1 = ProductResponse.builder()
+                .id(1L)
+                .productNumber("001")
+                .type(ProductType.HANDMADE)
+                .sellingStatus(ProductSellingStatus.SELLING)
+                .name("아메리카노")
+                .price(4000)
+                .build();
+        ProductResponse productResponse2 = ProductResponse.builder()
+                .id(2L)
+                .productNumber("002")
+                .type(ProductType.HANDMADE)
+                .sellingStatus(ProductSellingStatus.SELLING)
+                .name("카푸치노")
+                .price(4500)
+                .build();
+        List<ProductResponse> result = List.of(productResponse1, productResponse2);
+
+        // BDD Stubbing
+        given(productService.getProductSelling()).willReturn(result);
+
+        // when // then
+        mockMvc.perform(get("/api/v1/products/selling")
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(200))
+                .andExpect(jsonPath("$.status").value("OK"))
+                .andExpect(jsonPath("$.message").value("success"))
+                .andExpect(jsonPath("$.data").isArray())
+                .andDo(MockMvcRestDocumentation.document("product-getselling",
+                        Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                        Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                        PayloadDocumentation.responseFields(
+                                PayloadDocumentation.fieldWithPath("code").type(JsonFieldType.NUMBER)
+                                        .description("코드"),
+                                PayloadDocumentation.fieldWithPath("status").type(JsonFieldType.STRING)
+                                        .description("상태"),
+                                PayloadDocumentation.fieldWithPath("message").type(JsonFieldType.STRING)
+                                        .description("메시지"),
+                                PayloadDocumentation.fieldWithPath("data").type(JsonFieldType.ARRAY)
+                                        .description("응답 데이터"),
+                                PayloadDocumentation.fieldWithPath("data[].id").type(JsonFieldType.NUMBER)
+                                        .description("상품 ID"),
+                                PayloadDocumentation.fieldWithPath("data[].productNumber").type(JsonFieldType.STRING)
+                                        .description("상품 번호"),
+                                PayloadDocumentation.fieldWithPath("data[].type").type(JsonFieldType.STRING)
+                                        .description("상품 타입"),
+                                PayloadDocumentation.fieldWithPath("data[].sellingStatus").type(JsonFieldType.STRING)
+                                        .description("상품 판매상태"),
+                                PayloadDocumentation.fieldWithPath("data[].name").type(JsonFieldType.STRING)
+                                        .description("상품 이름"),
+                                PayloadDocumentation.fieldWithPath("data[].price").type(JsonFieldType.NUMBER)
                                         .description("상품 가격")
                         )
                 ));
