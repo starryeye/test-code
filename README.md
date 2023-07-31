@@ -25,6 +25,7 @@ How to write test code
 - 지정된 날짜의 총 매출 금액을 계산하여 메일로 보내는 기능
 
 ## API 명세
+- Spring REST Docs 이용
 - localhost:8080/docs/index.html
 
 ## project
@@ -39,6 +40,6 @@ How to write test code
   - AssertJ
   - JUnit5
   - Mockito
-- Spring RestDocs
+- Spring REST Docs
   - asciidocs
   - mockmvc
