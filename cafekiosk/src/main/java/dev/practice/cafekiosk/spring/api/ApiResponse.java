@@ -28,7 +28,7 @@ public class ApiResponse<T> {
     }
 
     public static <T> ApiResponse<T> ok(T data) {
-        return of(data, null, HttpStatus.OK);
+        return of(data, "success", HttpStatus.OK);
     }
 
 }

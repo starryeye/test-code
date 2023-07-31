@@ -176,7 +176,7 @@ class ProductControllerTest extends ControllerTestSupport {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(200))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.status").value("OK"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").isEmpty()) //null
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("success"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data").isArray());
     }
 }
