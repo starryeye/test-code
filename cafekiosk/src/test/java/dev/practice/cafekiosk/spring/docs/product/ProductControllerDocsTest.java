@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
+import org.springframework.restdocs.operation.preprocess.Preprocessors;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.restdocs.payload.PayloadDocumentation;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -81,7 +82,10 @@ public class ProductControllerDocsTest extends RestDocsSupport {
                 // 여기서부터 RestDocs 를 위한 코드이다.
                 //product-create : 문서의 id (임의로 지정하면 된다.)
                 //PayloadDocumentation : 요청과 응답 데이터를 정의해준다.
+                //Preprocessors.prettyPrint : 문서를 만들기 전에 설정.. json 을 가독성있게 바꿔준다.
                 .andDo(MockMvcRestDocumentation.document("product-create",
+                        Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                        Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
                         PayloadDocumentation.requestFields(
                                 PayloadDocumentation.fieldWithPath("type").type(JsonFieldType.STRING)
                                         .description("상품 타입"),
