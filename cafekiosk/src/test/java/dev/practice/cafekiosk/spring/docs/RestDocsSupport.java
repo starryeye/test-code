@@ -1,9 +1,13 @@
 package dev.practice.cafekiosk.spring.docs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
@@ -39,9 +43,16 @@ public abstract class RestDocsSupport {
      */
     @BeforeEach
     void setUp(RestDocumentationContextProvider provider) {
+        // LocalDateTime 역직렬화 처리 가능하도록..
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
         this.mockMvc = MockMvcBuilders.standaloneSetup(initController())
+                .setMessageConverters(new MappingJackson2HttpMessageConverter(objectMapper))
                 .apply(MockMvcRestDocumentation.documentationConfiguration(provider))
                 .build();
+
+
     }
 
     protected abstract Object initController();
