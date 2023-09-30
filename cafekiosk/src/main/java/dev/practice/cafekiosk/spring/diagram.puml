@@ -1,0 +1,190 @@
+@startuml
+class dev.practice.cafekiosk.spring.api.service.product.response.ProductResponse {
+- Long id
+- String productNumber
+- ProductType type
+- ProductSellingStatus sellingStatus
+- String name
+- int price
+- <<Create>> ProductResponse(Long,String,ProductType,ProductSellingStatus,String,int)
++ {static} ProductResponse of(Product)
+}
+interface dev.practice.cafekiosk.spring.domain.orderproduct.OrderProductRepository {
+}
+class dev.practice.cafekiosk.spring.api.service.mail.MailService {
+- MailSendClient mailSendClient
+- MailSendHistoryRepository mailSendHistoryRepository
++ boolean sendMail(String,String,String,String)
+}
+class dev.practice.cafekiosk.spring.api.controller.product.request.ProductCreateRequest {
+- ProductType type
+- ProductSellingStatus sellingStatus
+- String name
+- int price
+- <<Create>> ProductCreateRequest(ProductType,ProductSellingStatus,String,int)
++ ProductCreateServiceRequest toServiceRequest()
+}
+enum dev.practice.cafekiosk.spring.domain.order.OrderStatus {
++  INIT
++  CANCELED
++  PAYMENT_COMPLETED
++  PAYMENT_FAILED
++  RECEIVED
++  COMPLETED
+- String text
+}
+class dev.practice.cafekiosk.spring.api.service.order.OrderService {
+- OrderRepository orderRepository
+- ProductRepository productRepository
+- StockRepository stockRepository
++ OrderResponse createOrder(OrderCreateServiceRequest,LocalDateTime)
+- void deductStockQuantities(List<Product>)
+- List<Product> findByProductsBy(List<String>)
+- {static} List<String> extractStockProductNumbers(List<Product>)
+- Map<String,Stock> createStockMapBy(List<String>)
+- {static} Map<String,Long> createCountingMapBy(List<String>)
+}
+class dev.practice.cafekiosk.spring.domain.order.Order {
+- Long id
+- OrderStatus orderStatus
+- int totalPrice
+- LocalDateTime registeredAt
+- List<OrderProduct> orderProducts
+- <<Create>> Order(List<Product>,OrderStatus,LocalDateTime)
++ {static} Order create(List<Product>,LocalDateTime)
+- int calculateTotalPrice(List<Product>)
+}
+interface dev.practice.cafekiosk.spring.domain.product.ProductRepository {
+~ List<Product> findBySellingStatusIn(List<ProductSellingStatus>)
+~ List<Product> findAllByProductNumberIn(List<String>)
+~ String findLatestProductNumber()
+}
+class dev.practice.cafekiosk.spring.api.service.order.OrderStatisticsService {
+- OrderRepository orderRepository
+- MailService mailService
++ boolean sendOrderStatisticsMail(LocalDate,String)
+}
+interface dev.practice.cafekiosk.spring.domain.order.OrderRepository {
+~ List<Order> findOrdersBy(LocalDateTime,LocalDateTime,OrderStatus)
+}
+abstract class dev.practice.cafekiosk.spring.domain.BaseEntity {
+- LocalDateTime createdAt
+- LocalDateTime lastModifiedAt
+}
+interface dev.practice.cafekiosk.spring.domain.stock.StockRepository {
+~ List<Stock> findAllByProductNumberIn(List<String>)
+}
+class dev.practice.cafekiosk.spring.domain.stock.Stock {
+- Long id
+- String productNumber
+- int quantity
+- <<Create>> Stock(String,int)
++ {static} Stock create(String,int)
++ boolean isQuantityLessThan(int)
++ void deductQuantity(int)
+}
+enum dev.practice.cafekiosk.spring.domain.product.ProductSellingStatus {
++  SELLING
++  HOLD
++  STOP_SELLING
+- String text
++ {static} List<ProductSellingStatus> forDisplay()
+}
+class dev.practice.cafekiosk.spring.api.controller.order.request.OrderCreateRequest {
+- List<String> productNumbers
+- <<Create>> OrderCreateRequest(List<String>)
++ OrderCreateServiceRequest toServiceRequest()
+}
+class dev.practice.cafekiosk.spring.config.JpaAuditingConfig {
+}
+class dev.practice.cafekiosk.spring.api.controller.product.ProductController {
+- ProductService productService
++ ApiResponse<ProductResponse> createProduct(ProductCreateRequest)
++ ApiResponse<List<ProductResponse>> getProductsSelling()
+}
+class dev.practice.cafekiosk.spring.api.service.order.request.OrderCreateServiceRequest {
+- List<String> productNumbers
+- <<Create>> OrderCreateServiceRequest(List<String>)
+}
+class dev.practice.cafekiosk.spring.domain.orderproduct.OrderProduct {
+- Long id
+- Order order
+- Product product
++ <<Create>> OrderProduct(Order,Product)
+}
+class dev.practice.cafekiosk.spring.api.ApiResponse {
+- T data
+- String message
+- HttpStatus status
+- int code
++ <<Create>> ApiResponse(T,String,HttpStatus)
++ {static} ApiResponse<T> of(T,String,HttpStatus)
++ {static} ApiResponse<T> of(T,HttpStatus)
++ {static} ApiResponse<T> ok(T)
+}
+enum dev.practice.cafekiosk.spring.domain.product.ProductType {
++  HANDMADE
++  BOTTLE
++  BAKERY
+- String text
++ {static} boolean containsStockType(ProductType)
+}
+class dev.practice.cafekiosk.spring.CafekioskApplication {
++ {static} void main(String[])
+}
+class dev.practice.cafekiosk.spring.api.service.product.request.ProductCreateServiceRequest {
+- ProductType type
+- ProductSellingStatus sellingStatus
+- String name
+- int price
+- <<Create>> ProductCreateServiceRequest(ProductType,ProductSellingStatus,String,int)
++ Product toEntity(String)
+}
+class dev.practice.cafekiosk.spring.domain.product.Product {
+- Long id
+- String productNumber
+- ProductType type
+- ProductSellingStatus sellingStatus
+- String name
+- int price
+- <<Create>> Product(String,ProductType,ProductSellingStatus,String,int)
+}
+class dev.practice.cafekiosk.spring.api.ApiControllerAdvice {
++ ApiResponse<?> bindException(BindException)
+}
+class dev.practice.cafekiosk.spring.api.controller.order.OrderController {
+- OrderService orderService
++ ApiResponse<OrderResponse> createOrder(OrderCreateRequest)
+}
+class dev.practice.cafekiosk.spring.domain.history.mail.MailSendHistory {
+- Long id
+- String fromEmail
+- String toEmail
+- String subject
+- String content
+- <<Create>> MailSendHistory(String,String,String,String)
+}
+interface dev.practice.cafekiosk.spring.domain.history.mail.MailSendHistoryRepository {
+}
+class dev.practice.cafekiosk.spring.client.mail.MailSendClient {
++ boolean sendMail(String,String,String,String)
+}
+class dev.practice.cafekiosk.spring.api.service.product.ProductService {
+- ProductRepository productRepository
++ ProductResponse createProduct(ProductCreateServiceRequest)
++ List<ProductResponse> getProductSelling()
+- String createNextProductNumber()
+}
+
+
+org.springframework.data.jpa.repository.JpaRepository <|-- dev.practice.cafekiosk.spring.domain.orderproduct.OrderProductRepository
+dev.practice.cafekiosk.spring.domain.BaseEntity <|-- dev.practice.cafekiosk.spring.domain.order.Order
+org.springframework.data.jpa.repository.JpaRepository <|-- dev.practice.cafekiosk.spring.domain.product.ProductRepository
+org.springframework.data.jpa.repository.JpaRepository <|-- dev.practice.cafekiosk.spring.domain.order.OrderRepository
+org.springframework.data.jpa.repository.JpaRepository <|-- dev.practice.cafekiosk.spring.domain.stock.StockRepository
+dev.practice.cafekiosk.spring.domain.BaseEntity <|-- dev.practice.cafekiosk.spring.domain.stock.Stock
+dev.practice.cafekiosk.spring.domain.BaseEntity <|-- dev.practice.cafekiosk.spring.domain.orderproduct.OrderProduct
+dev.practice.cafekiosk.spring.domain.BaseEntity <|-- dev.practice.cafekiosk.spring.domain.product.Product
+dev.practice.cafekiosk.spring.domain.BaseEntity <|-- dev.practice.cafekiosk.spring.domain.history.mail.MailSendHistory
+org.springframework.data.jpa.repository.JpaRepository <|-- dev.practice.cafekiosk.spring.domain.history.mail.MailSendHistoryRepository
+@enduml
