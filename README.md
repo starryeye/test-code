@@ -12,3 +12,4 @@ How to write test code
     - TDD, AssertJ, JUnit, Mockito, Spring REST Docs
   - [splitpay](https://github.com/starryeye/architecture/tree/main/layered)
     - TDD, AssertJ, JUnit, Mockito
+    - architecture repo 에 위치하여 layered project 이기도 함
