@@ -10,3 +10,5 @@ How to write test code
   - 실전 프로젝트를 통해 사용해본다.
   - cafekiosk
     - TDD, AssertJ, JUnit, Mockito, Spring REST Docs
+  - [splitpay](https://github.com/starryeye/architecture/tree/main/layered)
+    - TDD, AssertJ, JUnit, Mockito
