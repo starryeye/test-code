@@ -8,6 +8,9 @@ How to write test code
     - JUnit 정리
     - AssertJ 정리
   - Mockito (todo)
+  - projectreactor(Reactor) reactor-test (todo)
+  - testcontainers (todo)
+  - mockwebserver (todo)
 - practice (실전)
   - 실전 프로젝트를 통해 사용해본다.
   - cafekiosk
@@ -15,3 +18,5 @@ How to write test code
   - [splitpay](https://github.com/starryeye/architecture/tree/main/layered)
     - TDD, AssertJ, JUnit, Mockito
     - architecture repo 에 위치하여 layered project 이기도 함
+  - [user](https://github.com/starryeye/spring-webflux/tree/main/practice/withR2dbc/user)
+    - JUnit, Mockito, projectreator-reactor-test, testcontainers, mockwebserver
